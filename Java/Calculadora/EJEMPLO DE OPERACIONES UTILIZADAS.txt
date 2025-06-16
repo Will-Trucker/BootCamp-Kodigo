@@ -1,0 +1,18 @@
+EJEMPLO DE OPERACIONES UTILIZADAS
+SUMA	5 + 3 = 8
+SUMA	-4 + 7 = 3
+RESTA	10 – 4 = 6
+RESTA	-2 – 8 = 6 ** Leer **
+MULTIPLICACION	6 * 3 = 18
+MULTIPLICACION	-5 * -7 = -35
+DIVISION	12 / 4 = 3
+DIVISION	-15 / 3 = -5
+POTENCIA	2^3 = 8
+POTENCIA	5^0 = 1
+RAIZ	√16 = 4
+RAIZ	√0 = 0
+
+
+
+Nota **** 
+Tomar en cuenta que el programa recibe valores negativos lo cual quiere decir que independientemente el signo que tenga se brindara la respuesta tomando en cuenta ley de signos, podemos ver que el caso de la resta -2 – (-8) su resultado es 6 debido a que Java toma en cuenta la ley de signos ya que negativo con negativo se convierte el termino afectado en su signo positivo.
