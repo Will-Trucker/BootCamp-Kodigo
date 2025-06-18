@@ -1,5 +1,5 @@
 package command;
-
+// comando para reservar un carro
 public class ReserverCarCommand implements Command{
     private String carModel;
 

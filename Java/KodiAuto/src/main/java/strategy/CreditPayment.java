@@ -1,5 +1,5 @@
 package strategy;
-
+// estrategia para el pago con tarjeta
 public class CreditPayment implements PaymentStrategy{
     @Override
     public void pay(double monto){

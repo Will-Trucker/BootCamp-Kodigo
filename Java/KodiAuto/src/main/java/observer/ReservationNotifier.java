@@ -2,7 +2,7 @@ package observer;
 
 import java.util.ArrayList;
 import java.util.List;
-
+// Encargado de notificar a los observadores(cliente, etc.)
 public class ReservationNotifier {
     private List<Observer> observers = new ArrayList<>();
 

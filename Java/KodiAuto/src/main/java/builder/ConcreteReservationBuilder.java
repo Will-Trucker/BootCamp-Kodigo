@@ -1,5 +1,5 @@
 package builder;
-
+// builder que construye los objetos para la reservacion
 public class ConcreteReservationBuilder implements ReservationBuilder{
     private String carType;
     private boolean gps;

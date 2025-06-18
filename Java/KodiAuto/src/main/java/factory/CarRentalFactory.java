@@ -1,5 +1,6 @@
 package factory;
 
+// Para crear las instancias de los autos
 public class CarRentalFactory {
     public static CarRental createCar(String type){
         if(type == null){

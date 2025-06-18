@@ -1,4 +1,4 @@
-
+// importacion de clases externas
 import facade.ReservationFacade;
 import factory.*;
 import decorator.*;
@@ -24,93 +24,108 @@ public class Main {
 
         // uso de instancia unica de reserva
         ReservationFacade facade = new ReservationFacade();
+        System.out.println("****************************************");
+        System.out.println("                                        ");
         System.out.println("¿Desea Solicitar una Reserva ? - (Si/No)");
+        System.out.println("                                        ");
+        System.out.println("****************************************");
         String response = scanner.nextLine();
-        if(response.equalsIgnoreCase("si")){
-            System.out.println("Ingrese el modelo del auto: ");
-            String carModel = scanner.nextLine();
-            facade.makeReservation(carModel);
-        }
 
-        // Factory Method + Decorator: Selección de tipo de auto con validación
-        String type = "";
-        while(true) {
-            System.out.print("Seleccione tipo de auto (economy/luxury/suv): ");
-            type = scanner.nextLine();
-            if(type.equalsIgnoreCase("economy") ||
-                    type.equalsIgnoreCase("luxury") ||
-                    type.equalsIgnoreCase("suv")) break;
-            System.out.println("Tipo inválido. Intente de nuevo.");
-        }
-
-        CarRental car = CarRentalFactory.createCar(type);
-
-        // Decorator: Agregar GPS
-        System.out.print("¿Desea GPS? (sí/no): ");
-        if(scanner.nextLine().equalsIgnoreCase("sí")) {
-            car = new GPSDecorator(car);
-        }
-
-        // Decorator: Agregar Seguro
-        System.out.print("¿Desea seguro? (sí/no): ");
-        if(scanner.nextLine().equalsIgnoreCase("sí")) {
-            car = new InsuranceDecorator(car);
-        }
-
-        System.out.println("Reserva con extras: " + car.getDescripcion());
-
-        // Builder: Construcción de reserva completa
-        ConcreteReservationBuilder builder = new ConcreteReservationBuilder();
-        builder.setCarType(type);
-
-        System.out.print("¿Desea GPS para la reserva completa? (sí/no): ");
-        if(scanner.nextLine().equalsIgnoreCase("sí")) builder.AddGPS();
-
-        System.out.print("¿Desea seguro para la reserva completa? (sí/no): ");
-        if(scanner.nextLine().equalsIgnoreCase("sí")) builder.AddInsurance();
-
-        System.out.println("Reserva Completa (Builder): " + builder.build());
-
-        // Adapter: Uso de servicio de reserva externo (simulado)
-        ThirdPartyCarRental thirdParty = new ThirdPartyService();
-        ThirdPartyAdapter adapter = new ThirdPartyAdapter(thirdParty);
-
-        System.out.print("Ingrese modelo para reservar con servicio externo: ");
-        String externalModel = scanner.nextLine();
-        adapter.reserve(externalModel);
-
-        // Strategy: Selección de método de pago
-        PaymentStrategy payment;
-        while (true) {
-            System.out.print("Seleccione método de pago (credit/paypal): ");
-            String paymentMethod = scanner.nextLine();
-            if(paymentMethod.equalsIgnoreCase("credit")) {
-                payment = new CreditPayment();
-                break;
-            } else if(paymentMethod.equalsIgnoreCase("paypal")) {
-                payment = new PaypalPayment();
-                break;
-            } else {
-                System.out.println("Método de pago no válido. Intente de nuevo.");
+        if(response.equalsIgnoreCase("si")) {
+            // Factory: Selección tipo de auto
+            String type;
+            while (true) {
+                System.out.println("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*");
+                System.out.print("Seleccione tipo de auto (economy/luxury/suv): ");
+                System.out.println("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*");
+                type = scanner.nextLine();
+                if(type.equalsIgnoreCase("economy") ||
+                        type.equalsIgnoreCase("luxury") ||
+                        type.equalsIgnoreCase("suv")) break;
+                System.out.println("Tipo inválido. Intente de nuevo.");
             }
+            CarRental car = CarRentalFactory.createCar(type);
+
+            // Decorator: Extras
+            System.out.println("*******************************************");
+            System.out.println("                                           ");
+            System.out.print("¿Desea agregar Conductor adicional? (si/no): ");
+            System.out.println("                                           ");
+            System.out.println("*******************************************");
+            if(scanner.nextLine().equalsIgnoreCase("si")) {
+                car = new AdditionalDriverDecorator(car);
+            }
+
+            System.out.println("*******************************************");
+            System.out.println("                                           ");
+            System.out.print("   ¿Desea agregar Silla para bebé? (si/no):  ");
+            System.out.println("                                           ");
+            System.out.println("*******************************************");
+            if(scanner.nextLine().equalsIgnoreCase("si")) {
+                car = new BabySeatDecorator(car);
+            }
+
+            System.out.println("*******************************************");
+            System.out.println("                                           ");
+            System.out.print("     ¿Desea agregar Tanque lleno? (si/no):   ");
+            System.out.println("                                           ");
+            System.out.println("*******************************************");
+            if(scanner.nextLine().equalsIgnoreCase("si")) {
+                car = new FullTankDecorator(car);
+            }
+
+
+            System.out.println("*******************************************");
+            System.out.println("Reserva con extras: " + car.getDescripcion());
+            System.out.println("*******************************************");
+            // Builder Para construir la reservar
+            ConcreteReservationBuilder builder = new ConcreteReservationBuilder();
+            builder.setCarType(type);
+            Reservation fullReservation = builder.build();
+            System.out.println("-----------------------------------------------");
+            System.out.println("Reserva Completa: " + fullReservation);
+            System.out.println("-----------------------------------------------");
+            // Strategy: Metodos de pago aceptados
+            PaymentStrategy payment;
+            while (true) {
+                System.out.println("-----------------------------------------------");
+                System.out.print("Seleccione método de pago (credit/paypal):       ");
+                System.out.println("-----------------------------------------------");
+                String payMethod = scanner.nextLine();
+                if (payMethod.equalsIgnoreCase("credit")) {
+                    payment = new CreditPayment();
+                    break;
+                } else if (payMethod.equalsIgnoreCase("paypal")) {
+                    payment = new PaypalPayment();
+                    break;
+                } else {
+                    System.out.println("Método no válido.");
+                }
+            }
+            payment.pay(200);
+
+            // Observer: Para enviar la notificacion al cliente
+            System.out.println("-----------------------------------------------");
+            System.out.print("Ingrese nombre del cliente para notificación:    ");
+            System.out.println("-----------------------------------------------");
+            String customerName = scanner.nextLine();
+            ReservationNotifier notifier = new ReservationNotifier();
+            notifier.addObservers(new Customer(customerName));
+            System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+            notifier.notifyAllObservers("  ¡Su reserva ha sido confirmada!       ");
+            System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+            // Command Para la reservacion
+            Command reserveCommand = new ReserverCarCommand(type);
+            ReservationInvoker invoker = new ReservationInvoker();
+            invoker.setCommand(reserveCommand);
+            invoker.executeCommand();
+
+        } else {
+            // No realizar nada si la operacion es falllida
+            System.out.println("******************************");
+            System.out.println("No se realizó ninguna reserva.");
+            System.out.println("******************************");
         }
-        payment.pay(200); // Monto fijo simulado
-
-        // Observer: Notificar al cliente
-        ReservationNotifier notifier = new ReservationNotifier();
-        System.out.print("Ingrese nombre de cliente para notificar: ");
-        String customerName = scanner.nextLine();
-        Customer customer = new Customer(customerName);
-        notifier.addObservers(customer);
-        notifier.notifyAllObservers("¡Su reserva ha sido confirmada!");
-
-        // Command: Ejecutar operación de reserva como comando
-        System.out.print("Ingrese modelo para reservar usando Command: ");
-        String commandCar = scanner.nextLine();
-        Command reserveCommand = new ReserverCarCommand(commandCar);
-        ReservationInvoker invoker = new ReservationInvoker();
-        invoker.setCommand(reserveCommand);
-        invoker.executeCommand();
 
         System.out.println("---- Gracias Por Elegirnos ----");
         scanner.close();
